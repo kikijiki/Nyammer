@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:views="com.kikijiki.nyammer.views.*"
+		 width="100%">
+	
+	<fx:Declarations>
+		<s:DateTimeFormatter id="dtf" locale="ja-JP"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.events.ResizeEvent;
+			override protected function get hovered():Boolean { return false; }
+			override protected function get down():Boolean { return false; }
+			override public function get selected():Boolean { return false; }
+			override public function get showsCaret():Boolean { return false; }
+			
+			[Bindable]
+			public static var headerHeight:Number = 48;
+		]]>
+	</fx:Script>
+
+	<s:VGroup width="100%">
+		<s:BorderContainer width="100%" height="100%" backgroundColor="#DDDDDD" borderVisible="false">
+			<s:VGroup width="100%">
+				<s:HGroup width="100%" paddingTop="2" paddingRight="2" paddingLeft="2">
+					<views:UserIcon height="{headerHeight}" user="{data.sender}" />
+					<s:VGroup>
+						<s:Label text="{data.sender.fullName}" fontSize="{headerHeight / 2 - 4}" maxDisplayedLines="1"/>
+						<s:Label text="{data.sender.job}" fontSize="{headerHeight / 2 - 4}" maxDisplayedLines="1"/>
+					</s:VGroup>
+					<s:Spacer width="100%" />
+					<s:VGroup horizontalAlign="right">
+						<s:Label text="{dtf.format(data.date)}"/>
+						<s:Label text="like: {data.like_count}" toolTip="{data.like_list}" visible="{data.like_count > 0}" includeInLayout="{visible}"/>
+					</s:VGroup>
+				</s:HGroup>
+				<views:AttachmentsListView width="100%" attachmentsList="{data.attachments}" visible="{data.hasAttachments}" includeInLayout="{data.hasAttachments}"/>
+			</s:VGroup>
+		</s:BorderContainer>
+		<s:Spacer height="2" />
+		<s:Label width="100%" fontSize="12" lineBreak="toFit" paddingBottom="2" paddingLeft="6" paddingRight="6" text="{data.body}"/>
+		<s:Line width="100%">
+			<s:stroke>
+				<s:SolidColorStroke color="gray" weight="2"/>
+			</s:stroke>
+		</s:Line>
+	</s:VGroup>
+
+</s:ItemRenderer>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Image xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 source="assets/images/placeholder.png"
+		 rightClick="onRightClick(event)">
+	<fx:Script>
+		<![CDATA[
+			import com.kikijiki.nyammer.models.ThreadModel;
+			import com.kikijiki.nyammer.models.UserModel;
+			
+			import mx.controls.Alert;
+			import mx.events.CloseEvent;
+			import mx.events.FlexEvent;
+			
+			private var userid:String;
+			private var _user:UserModel;
+			
+			public function set user(user:UserModel):void
+			{
+				if(userid == user.id){ return; }
+				_user = user;
+				userid = user.id;
+				user.setIcon(this);
+				toolTip = user.fullName + " <" + user.job + ">";
+			}
+			
+			public function setSource(id:String, data:BitmapData):void
+			{
+				if(userid == id){ source = data; }
+			}
+			
+			protected function onRightClick(event:MouseEvent):void
+			{
+				if(!UserModel.isValid(_user)){ return; }
+				var thisUser:UserModel = _user; // May change because of virtual layout.
+				
+				Alert.buttonWidth = 80;
+				Alert.show(thisUser.fullName + "にプライベートメッセージを送りますか？", thisUser.fullName, (Alert.OK | Alert.CANCEL), this,
+					function(event:CloseEvent):void
+					{
+						if(event.detail == Alert.OK)
+						{
+							thisUser.network.openOrCreateOOOThread(thisUser, function(thread:ThreadModel):void
+							{
+								if(thread != null)
+								{
+									thread.preload();
+									thisUser.network.makePopup(thread, false);
+								}
+							});
+						}
+					});
+			}
+			
+		]]>
+	</fx:Script>
+</s:Image>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:views="com.kikijiki.nyammer.views.*"
+		 width="100%" autoDrawBackground="false" doubleClick="onDoubleClick(event)">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.kikijiki.nyammer.events.ListItemClickEvent;
+			protected function onDoubleClick(event:MouseEvent):void
+			{
+				dispatchEvent(new ListItemClickEvent(data));
+			}
+		]]>
+	</fx:Script>
+
+	<fx:Declarations>
+		<s:DateTimeFormatter id="dtf" locale="ja-JP"/>
+	</fx:Declarations>
+
+	<s:VGroup width="100%">
+		<s:HGroup width="100%" paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4">
+			<views:ParticipantsView dataProvider="{data.participants}" iconSize="24" borderVisible="false" autoHeight="false" height="100%" columnCount="2"/>
+			<s:Rect width="4" height="100%" >
+				<s:fill>
+					<s:SolidColor color="#666666" />
+				</s:fill>
+			</s:Rect>
+			<s:VGroup width="100%" >
+				<s:HGroup width="100%">
+					<s:Label width="100%" text="未読：{data.unreadCount}" visible="{data.unreadCount > 0}" fontSize="12" fontWeight="bold" color="#DD0000" />
+					<s:Label fontSize="10" text="最新更新：{dtf.format(data.getLastDate())}" textAlign="right"/>
+				</s:HGroup>
+				<s:Label width="100%" text="{data.excerpt}" />
+			</s:VGroup>
+		</s:HGroup>
+		<s:Line width="100%">
+			<s:stroke>
+				<s:SolidColorStroke color="#666666" weight="2" caps="square"/>
+			</s:stroke>
+		</s:Line>
+	</s:VGroup>
+</s:ItemRenderer>

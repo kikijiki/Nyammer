@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:views="com.kikijiki.nyammer.views.*">
+	<fx:Declarations>
+		<s:DateTimeFormatter id="dtf" locale="ja-JP"/>
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.kikijiki.nyammer.models.MessageModel;
+			
+			[Bindable]
+			public var message:MessageModel;
+			
+			[Bindable]
+			public var headerHeight:Number = 48;
+		]]>
+	</fx:Script>
+	
+	<s:BorderContainer width="100%" backgroundColor="#DDDDDD" borderVisible="false">
+		<s:VGroup width="100%">
+			<s:HGroup width="100%" paddingTop="2" paddingRight="2" paddingLeft="2">
+				<views:UserIcon height="{headerHeight}" user="{message.sender}" />
+				<s:VGroup>
+					<s:Label text="{message.sender.fullName}" fontSize="{headerHeight / 2 - 4}" maxDisplayedLines="1"/>
+					<s:Label text="{message.sender.job}" fontSize="{headerHeight / 2 - 4}" maxDisplayedLines="1"/>
+				</s:VGroup>
+				<s:Spacer width="100%" />
+				<s:Label text="{dtf.format(message.date)}"/>
+			</s:HGroup>
+			<views:AttachmentsListView width="100%" attachmentsList="{message.attachments}" visible="{message.hasAttachments}" includeInLayout="{message.hasAttachments}"/>
+		</s:VGroup>
+	</s:BorderContainer>
+	<s:Spacer height="2" />
+	<s:Label id="txtMessageBody" width="100%" fontSize="12" text="{message.body}" paddingBottom="2" paddingLeft="6" paddingRight="6" lineBreak="toFit"/>
+</s:VGroup>

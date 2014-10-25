@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:ItemRenderer xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				xmlns:s="library://ns.adobe.com/flex/spark" 
+				xmlns:local="*" xmlns:components="com.kikijiki.nyammer.components.*"
+				xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%"
+				creationComplete="onCreationComplete(event)"
+				dataChange="onDataChangeHandler(event)">
+	<s:states>
+		<s:State name="normal"/>
+		<s:State name="hovered"/>
+		<s:State name="selected"/>
+	</s:states>
+	
+	<fx:Script>
+		<![CDATA[
+			import com.kikijiki.nyammer.events.RealtimeStatusChangedEvent;
+			import com.kikijiki.nyammer.models.NetworkModel;
+			import com.kikijiki.nyammer.yammer.YammerRealtime;
+			
+			import mx.events.FlexEvent;
+			
+			private var currentNetwork:NetworkModel;
+			
+			protected function onCreationComplete(event:FlexEvent):void
+			{
+				listenToNetwork(data as NetworkModel);
+			}
+			
+			private function listenToNetwork(network:NetworkModel):void
+			{
+				if(currentNetwork == network){ return; }
+				if(currentNetwork != null)
+				{
+					currentNetwork.realtime.removeEventListener("realtimeStatusChanged", setStatus);
+				}
+				network.realtime.addEventListener("realtimeStatusChanged", setStatus);
+				currentNetwork = network;
+				setStatus();
+			}
+			
+			private function setStatus(event:RealtimeStatusChangedEvent = null):void
+			{
+				var status:String = event == null ? currentNetwork.realtime.status : event.status;
+				
+				if(status == YammerRealtime.REALTIME_STATUS_CONNECTED)
+				{ 
+					networkStatus.setStyle("color", "#00FF6A");
+					networkStatus.text = "◆";
+					return;
+				}
+				if(status == YammerRealtime.REALTIME_STATUS_DISCONNECTED)
+				{
+					networkStatus.setStyle("color", "#0D5570");
+					networkStatus.text = "◇";
+					return; 
+				}
+				if(status == YammerRealtime.REALTIME_STATUS_CONNECTING)
+				{
+					networkStatus.setStyle("color", "#FFD900");
+					networkStatus.text = "◆";
+					return;
+				}
+			}
+			
+			protected function onDataChangeHandler(event:FlexEvent):void
+			{
+				listenToNetwork(data as NetworkModel);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Style>
+		@namespace s "library://ns.adobe.com/flex/spark";
+		@namespace local "*";
+		@namespace mx "library://ns.adobe.com/flex/mx";
+		
+		.toggleSwitch
+		{
+			skinClass:ClassReference("com.kikijiki.nyammer.skins.ToggleSwitchSkin");
+		}
+	</fx:Style>
+	
+	<s:BorderContainer width="100%" borderColor="#FFAA33" borderVisible="false" borderWeight="4"
+					   cornerRadius="4"
+					   backgroundColor.hovered="#95C4D5" borderColor.hovered="#4FA2C1"
+					   borderVisible.hovered="true"
+					   backgroundColor.normal="#95C4D5" borderColor.normal="#95C4D5"
+					   borderVisible.normal="true"
+					   backgroundColor.selected="#4FA2C1" borderColor.selected="#1F81A6"
+					   borderVisible.selected="true">
+		<s:HGroup width="100%" height="100%" paddingLeft="2" paddingRight="2" paddingTop="2" paddingBottom="2" verticalAlign="middle">
+			<s:BorderContainer cornerRadius="2" borderColor="#FF0000" backgroundColor="#FF0000" borderWeight="4" visible="{data.unreadCount>0}" includeInLayout="{data.unreadCount>0}">
+				<s:Label text="{data.unreadCount}" fontSize="14" color="#FFFFFF" fontWeight="bold" horizontalCenter="0" verticalCenter="0"/>
+			</s:BorderContainer>
+			<s:Label width="100%" fontSize="{data.primary?18:16}"
+					 fontWeight="{data.primary?'bold':'normal'}" text="{data.name}"
+					 textAlign="right"
+					 color="#0D5570"
+					 color.selected="#FFFFFF"/>
+			<s:Label text="◆" fontSize="16" id="networkStatus" visible="{data.primary}" includeInLayout="{data.primary}" />
+		</s:HGroup>
+	</s:BorderContainer>
+</s:ItemRenderer>

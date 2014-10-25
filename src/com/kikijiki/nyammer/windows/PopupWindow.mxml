@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:PopupComponent xmlns:fx="http://ns.adobe.com/mxml/2009"
+						   xmlns:s="library://ns.adobe.com/flex/spark"
+						   xmlns:components="com.kikijiki.nyammer.components.*"
+						   xmlns:views="com.kikijiki.nyammer.views.*"
+						   xmlns:mx="library://ns.adobe.com/flex/mx"
+						   width="480" height="480" minWidth="300"  currentState="hidden" showStatusBar="false"
+						   height.shown="800" minHeight.shown="600"
+						   resizable.hidden="false"
+						   keyDown="onKeyDown(event)"
+						   title="プライベートメッセージ" xmlns:renderers="com.kikijiki.nyammer.renderers.*">
+	<fx:Declarations>
+		<s:Animate id="notificationAnimation"
+				   duration="100"
+				   repeatBehavior="reverse"
+				   repeatCount="2"
+				   target="{btnOpen}">
+			<s:SimpleMotionPath property="fontSize" valueFrom="60.0" valueTo="100" />
+		</s:Animate>
+
+		<s:Animate id="newParticipant"
+				   duration="400"
+				   repeatBehavior="reverse"
+				   repeatCount="4"
+				   target="{lstParticipants}">
+			<s:SimpleMotionPath property="borderColor" valueFrom="#000000" valueTo="#FF0000" />
+			<s:SimpleMotionPath property="scaleY" valueFrom="1.0" valueTo="1.5" />
+			<s:SimpleMotionPath property="scaleX" valueFrom="1.0" valueTo="1.5" />
+		</s:Animate>
+		
+		<s:Animate id="newParticipantLoop"
+				   duration="400"
+				   repeatCount="0"
+				   repeatBehavior="reverse"
+				   target="{lstParticipants}">
+			<s:SimpleMotionPath property="borderColor" valueFrom="#000000" valueTo="#FF0000" />
+			<s:SimpleMotionPath property="scaleY" valueFrom="1.0" valueTo="1.5" />
+			<s:SimpleMotionPath property="scaleX" valueFrom="1.0" valueTo="1.5" />
+		</s:Animate>
+		
+	</fx:Declarations>
+	
+	<fx:Script>
+		<![CDATA[
+			[Bindable]
+			public var shake_factor:Number = 30;
+			
+			public function onReplyKeyDown(event:KeyboardEvent):void
+			{
+				if(event.keyCode == Keyboard.ENTER && event.controlKey && canReply)
+				{
+					send();
+				}
+			}
+			
+			protected function onKeyDown(event:KeyboardEvent):void
+			{
+				if(event.keyCode == Keyboard.ESCAPE)
+				{
+					close();
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<components:states>
+		<s:State name="shown"/>
+		<s:State name="hidden"/>
+	</components:states>
+	
+	<s:VGroup width="100%" height="100%" paddingBottom="4" paddingLeft="4" paddingRight="4" paddingTop="4">
+		<s:Label visible.hidden="false" includeInLayout.hidden="false" text="スレッド:" />
+		<s:BorderContainer width="100%" height="100%" maxHeight="200" visible.hidden="false" includeInLayout.hidden="false" borderColor="#666666" borderWeight="4">
+			<s:Scroller width="100%" height="100%">
+				<s:HGroup id="threadGroup" width="100%" height="100%" gap="2">
+					<views:ParticipantsView id="lstParticipants" columnCount="2" dataProvider="{thread.participants}" borderVisible="false" iconSize="48" autoHeight="true" paddingLeft="2"/>
+					<s:Rect width="4" height="{threadGroup.height}" >
+						<s:fill>
+							<s:SolidColor color="#666666" />
+						</s:fill>
+					</s:Rect>
+					<views:MessageView width="100%" height="100%" message="{thread.initialMessage}"/>
+				</s:HGroup>	
+			</s:Scroller>
+		</s:BorderContainer>
+		<s:Button id="btnOpen" width="100%" height="100%" label="開封({unread})" click="showThread()"
+				  fontSize="60"
+				  visible.shown="false" includeInLayout.shown="false"/>
+		<s:HGroup width="100%" visible.hidden="false" includeInLayout.hidden="false" verticalAlign="middle">
+			<s:Label  text="ディスカッション({replies.length}):" />
+			<s:Spacer width="100%" />
+			<s:CheckBox label="自動スクロール" selected="@{lstThread.autoScroll}" />
+			<s:Button label="{loading ? 'ロード中…' : 'すべて表示'}" click="showAllReplies()" enabled="{shown_replies > 0}"/>
+		</s:HGroup>
+		<components:ScrollableList id="lstThread" width="100%" dataProvider="{replies}" itemRenderer="com.kikijiki.nyammer.renderers.MessageRenderer"
+				visible.hidden="false" includeInLayout.hidden="false" height="100%" minHeight="160" horizontalScrollPolicy="off"
+				skinClass="com.kikijiki.nyammer.skins.FixedListSkin"/>
+		<s:Label text="返事：" visible.hidden="false" includeInLayout.hidden="false"/>
+		<s:TextArea id="txtReplyBody" width="100%" height="120" text="@{replyBody}" editable="true" prompt="メッセージを入力してください。"
+								  includeInLayout.hidden="false" visible.hidden="false" keyDown="onReplyKeyDown(event)"/>		
+		<s:HGroup width="100%" height="32" visible.hidden="false" includeInLayout.hidden="false">
+			<s:Button width="100%" height="100%" label="送信 (ctrl + ⏎)" click="send()" enabled="{canReply}"/>
+			<s:Button width="32" height="32" icon="assets/images/sync.png" click="{thread.refresh()}"/>
+			<s:Image width="32" height="32" click="openInBrowser()" source="/assets/images/yammer-icon.png"/>
+		</s:HGroup>
+	</s:VGroup>
+</components:PopupComponent>

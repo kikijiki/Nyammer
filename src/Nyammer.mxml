@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nyammer:Nyammer xmlns:nyammer="com.kikijiki.nyammer.*"
+				 xmlns:fx="http://ns.adobe.com/mxml/2009"
+				 xmlns:s="library://ns.adobe.com/flex/spark"
+				 xmlns:mx="library://ns.adobe.com/flex/mx"
+				 xmlns:views="com.kikijiki.nyammer.views.*"
+				 title="Nyammer"
+				 visible="false" xmlns:local="*">
+	
+	<fx:Style source="assets/styles/default.css"/>
+</nyammer:Nyammer>

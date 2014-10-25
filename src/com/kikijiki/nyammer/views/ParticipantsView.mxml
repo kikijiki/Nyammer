@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TileList
+	xmlns:fx="http://ns.adobe.com/mxml/2009" 
+	xmlns:s="library://ns.adobe.com/flex/spark" 
+	xmlns:mx="library://ns.adobe.com/flex/mx"
+	xmlns:views="com.kikijiki.nyammer.views.*"
+	updateComplete="onUpdateComplete(event)"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.kikijiki.nyammer.renderers.ParticipantRenderer;
+			
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			public var iconSize:Number = 48;
+			
+			[Bindable]
+			public var autoHeight:Boolean = true;
+			
+			protected function onUpdateComplete(event:FlexEvent):void
+			{
+				if(autoHeight)
+				{
+					var h:Number = Math.ceil(this.dataProvider.length / this.columnCount) * iconSize;
+					height = h;
+				}
+			}			
+		]]>
+	</fx:Script>
+	
+	<mx:itemRenderer>
+		<fx:Component>
+			<mx:Canvas width="{outerDocument.iconSize}" height="{outerDocument.iconSize}">
+				<views:UserIcon id="userIcon" width="{outerDocument.iconSize}" height="{outerDocument.iconSize}" user="{data}"/>
+			</mx:Canvas>
+		</fx:Component>
+	</mx:itemRenderer>
+</mx:TileList>

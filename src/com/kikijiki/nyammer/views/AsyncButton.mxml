@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Button xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx" 
+		  creationComplete="onCreationComplete(event)">
+	<fx:Declarations>
+		<s:AnimateColor id="busyAnimation"
+				   duration="800"
+				   repeatBehavior="reverse"
+				   repeatCount="0"
+				   target="{this}"
+				   colorPropertyName="chromeColor"
+				   colorFrom="{defaultChromeColor}" colorTo="#FF9100" />
+	</fx:Declarations>
+	<fx:Script>
+		<![CDATA[
+			import mx.events.FlexEvent;
+			
+			[Bindable]
+			public var defaultChromeColor:uint;
+			
+			public function setNormalState():void
+			{
+				busyAnimation.stop();
+				enabled = true;
+			}
+			
+			public function setBusyState():void
+			{
+				busyAnimation.play();
+				enabled = false;
+			}
+			
+			public function setDisabledState():void
+			{
+				busyAnimation.stop();
+				enabled = false;
+			}
+			
+			protected function onCreationComplete(event:FlexEvent):void
+			{
+				defaultChromeColor = getStyle("chromeColor");
+			}
+			
+		]]>
+	</fx:Script>
+</s:Button>

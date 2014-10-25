@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<components:UserListComponent xmlns:fx="http://ns.adobe.com/mxml/2009"
+							  xmlns:s="library://ns.adobe.com/flex/spark"
+							  xmlns:mx="library://ns.adobe.com/flex/mx"
+							  xmlns:components="com.kikijiki.nyammer.components.*"
+							  width="100%" height="100%">
+	<s:VGroup width="100%" height="100%">
+		<s:VGroup width="100%" height="100%" paddingBottom="6" paddingLeft="6" paddingRight="6">
+			<s:DataGrid id="userGrid" width="100%" height="100%" dataProvider="{userListDataView}" doubleClickEnabled="true">
+				<s:columns>
+					<s:ArrayList>
+						<s:GridColumn headerText="" dataField="image" itemRenderer="com.kikijiki.nyammer.renderers.UserIconGridRenderer" width="24" />
+						<s:GridColumn headerText="名前" dataField="fullName"/>
+						<s:GridColumn headerText="職種" dataField="job"/>
+					</s:ArrayList>
+				</s:columns>
+			</s:DataGrid>
+			<s:HGroup width="100%" height="32">
+				<s:Label height="100%" text="検索" verticalAlign="middle"/>
+				<s:TextInput width="100%" height="100%" change="{onFilterChange(event)}" text="@{filter}"/>
+				<s:Button width="32" height="32" label="×" click="resetFilter();" toolTip="フィルタをリセット"/>
+				<s:Button width="32" height="32" click="reload();"
+						  enabled="{network.users.loadFinished}"
+						  icon="assets/images/sync.png" toolTip="ユーザリストを再取得"/>
+				<s:Image width="32" height="32" click="openWebsite()"
+						 source="/assets/images/yammer-icon.png"/>
+			</s:HGroup>
+		</s:VGroup>
+	</s:VGroup>
+</components:UserListComponent>

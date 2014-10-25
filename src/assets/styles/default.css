@@ -1,0 +1,18 @@
+@namespace mx "library://ns.adobe.com/flex/mx";
+@namespace s "library://ns.adobe.com/flex/spark";
+
+/*
+@font-face {
+    font-family: localIPAGothic;
+    src: url("assets/fonts/ipag.ttf");
+    font-style: normal;
+    font-weight: normal;
+    embed-as-cff: true;
+    advanced-anti-aliasing: true;
+}
+*/
+
+global {
+	font-family: "ＭＳ ゴシック";
+	content-background-color: #FFFFFF;
+}

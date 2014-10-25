@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<application xmlns="http://ns.adobe.com/air/application/3.1">
+	<id>Nyammer</id>
+	<filename>Nyammer</filename>
+	<name>Nyammer</name>
+	
+	<versionNumber>1.0.3</versionNumber>
+	<versionLabel>v1.0.3</versionLabel>
+	
+	<initialWindow>
+		<content>[This value will be overwritten by Flash Builder in the output app.xml]</content>
+		<autoOrients>false</autoOrients>
+        <fullScreen>false</fullScreen>
+        <visible>false</visible>
+    </initialWindow>
+
+	<icon>
+		<image16x16>assets/icons/icon_16.png</image16x16>
+		<image128x128>assets/icons/icon_128.png</image128x128>
+	</icon>
+</application>

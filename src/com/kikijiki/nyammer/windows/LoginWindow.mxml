@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Window xmlns:fx="http://ns.adobe.com/mxml/2009"
+		  xmlns:s="library://ns.adobe.com/flex/spark"
+		  xmlns:mx="library://ns.adobe.com/flex/mx"
+		  visible="false" width="800" height="500" creationComplete="init()" showStatusBar="false"
+		  title="ログイン">
+	<fx:Script>
+		<![CDATA[
+			import com.adobe.protocols.oauth2.OAuth2;
+			import com.adobe.protocols.oauth2.event.GetAccessTokenEvent;
+			import com.adobe.protocols.oauth2.grant.AuthorizationCodeGrant;
+			import com.adobe.protocols.oauth2.grant.IGrantType;
+			import com.adobe.protocols.oauth2.grant.ImplicitGrant;
+			
+			import flash.utils.setTimeout;
+			
+			import org.as3commons.logging.setup.LogSetupLevel;
+			
+			private var webView:StageWebView;
+			private var callback:Function;
+			
+			public var clientId:String;
+			public var clientSecret:String;
+			public var redirectURI:String;
+			
+			public function setListener(callback:Function):void
+			{
+				this.callback = callback;
+			}
+			
+			private function init():void
+			{
+				var window:Window = this;
+				webView = new StageWebView();
+				var rectangle:Rectangle = viewPort.getBounds(stage);
+				webView.viewPort = rectangle;
+				
+				getAccessToken();
+				
+				setTimeout(function():void
+				{
+					window.visible = true;
+				}, 2000);
+			}
+
+			private function getAccessToken():void
+			{
+				webView.stage = stage;
+				var oauth2:OAuth2 = new OAuth2(
+					"https://www.yammer.com/dialog/oauth", 
+					"https://www.yammer.com/oauth2/access_token.json", 
+					LogSetupLevel.ALL);
+				
+				var grant:IGrantType = new AuthorizationCodeGrant(
+					webView,
+					clientId,
+					clientSecret,
+					redirectURI);
+
+				oauth2.addEventListener(GetAccessTokenEvent.TYPE, onGetAccessToken);
+				oauth2.getAccessToken(grant);
+			}
+			
+			private function onGetAccessToken(getAccessTokenEvent:GetAccessTokenEvent):void
+			{
+				if(callback != null)
+				{
+					callback(getAccessTokenEvent.errorCode == null, getAccessTokenEvent.response);
+				}
+								
+				webView.dispose();
+				close();
+			}
+		]]>
+	</fx:Script>
+	
+	<s:Group id="viewPort" width="100%" height="100%">
+		<s:Rect width="100%" height="100%">
+			<s:fill>
+				<s:SolidColor color="#cecece" />
+			</s:fill>
+		</s:Rect>
+	</s:Group>
+</s:Window>

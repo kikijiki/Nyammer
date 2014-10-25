@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:VGroup xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" paddingLeft="4" paddingRight="4">
+	
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			[Bindable]
+			public var attachmentsList:ArrayCollection;
+			
+			[Bindable]
+			public var shown:Boolean = false;
+
+			protected function showAttachments(event:MouseEvent):void
+			{
+				shown = !shown;
+				currentState = shown ? "attachments_shown" : "attachments_hidden";
+			}
+			
+		]]>
+	</fx:Script>
+	<s:states>
+		<s:State name="attachments_hidden"/>
+		<s:State name="attachments_shown"/>
+	</s:states>
+	
+	<s:HGroup width="100%" verticalAlign="middle">
+		<s:Image source="assets/images/Disk.png"/>
+		<s:Label text="添付ファイルを表示" click="showAttachments(event)"/>	
+	</s:HGroup>
+	
+	<s:List width="100%" dataProvider="{attachmentsList}"
+			itemRenderer="com.kikijiki.nyammer.renderers.AttachmentRenderer"
+			visible.attachments_hidden="false" includeInLayout.attachments_hidden="false"/>
+</s:VGroup>
